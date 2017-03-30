@@ -1,6 +1,6 @@
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, views, response,status
 from .models import Account
-from .serializers import AccountCreateSerializer, AccountSerializer
+from .serializers import AccountCreateSerializer, AccountSerializer, AuthenticateSerializer
 
 
 # Create your views here.
@@ -17,3 +17,15 @@ class AccountListView(generics.ListAPIView):
     serializer_class = AccountSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+
+class AccountAuthenticationView(views.APIView):
+    queryset = Account.objects.all()
+    serializer_class = AuthenticateSerializer
+
+    def post(self, request):
+        data = request.data
+        serializer = AuthenticateSerializer(data=data)
+        if serializer.is_valid(raise_exception=True):
+            new_date = serializer.data
+            return response.Response(new_date,status=status.HTTP_200_OK)
+        return response.Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
