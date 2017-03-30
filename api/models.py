@@ -9,6 +9,7 @@ import uuid
 
 class Account(models.Model):
 
+    displayName = models.CharField(blank=False, max_length=255)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     username = models.CharField(max_length=255, blank=False)
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

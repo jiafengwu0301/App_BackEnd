@@ -15,11 +15,13 @@ class AccountCreateSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'username',
+            'displayName',
             'facebook',
             'password',
         ]
 
     def create(self, validated_data):
+
         user_data = validated_data.pop('user')
         user = User.objects.create(**user_data)
         user.set_password(user_data['password'])
@@ -38,11 +40,59 @@ class AccountSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'username',
-            'facebook'
+            'displayName',
+            'facebook',
         ]
 
 
+class AccountRetrieveSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Account
+        fields = [
+            'id',
+            'username',
+            'displayName',
+            'facebook',
+        ]
+
+
+class UpdateAccountSerializer(serializers.ModelSerializer):
+
+    password = serializers.CharField(source='user.password', allow_blank=True, allow_null=True)
+    facebook = serializers.CharField(allow_blank=True, allow_null=True)
+    displayName = serializers.CharField(allow_blank=True, allow_null=True)
+
+    class Meta:
+        model = Account
+        fields = [
+            'displayName',
+            'facebook',
+            'password'
+        ]
+
+    def update(self, instance, validated_data):
+
+        user_data = validated_data.pop('user', None)
+        user = User.objects.get(id=instance.user.id)
+        instance.displayName = self.value_or_keep(instance.displayName, validated_data.get('displayName', instance.displayName))
+        instance.facebook = self.value_or_keep(instance.facebook, validated_data.get('facebook',instance.facebook))
+        if user_data['password'] != "":
+            user.set_password(user_data['password'])
+        user.save()
+        instance.save()
+        return instance
+
+
+    @staticmethod
+    def value_or_keep(field, value):
+        if value == "":
+            return field
+        return value
+
+
 class AuthenticateSerializer(serializers.ModelSerializer):
+
     username = serializers.CharField(source='user.username')
     password = serializers.CharField(source='user.password', style={'input_type': 'password'})
     account = AccountSerializer(allow_null=True, read_only=True)
@@ -64,7 +114,6 @@ class AuthenticateSerializer(serializers.ModelSerializer):
 
         try:
             user = User.objects.get(username=username)
-            account = Account.objects.get(user=user)
 
         except:
             raise ValidationError("Incorrect Username/Password")
@@ -72,3 +121,4 @@ class AuthenticateSerializer(serializers.ModelSerializer):
         if user.check_password(password):
             attrs['account'] = user.account
             return attrs
+        raise ValidationError("Incorrect login/password.")

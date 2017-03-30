@@ -1,6 +1,7 @@
 from rest_framework import generics, permissions, views, response,status
 from .models import Account
-from .serializers import AccountCreateSerializer, AccountSerializer, AuthenticateSerializer
+from .serializers import AccountCreateSerializer, AccountSerializer, AuthenticateSerializer, \
+    UpdateAccountSerializer, AccountRetrieveSerializer
 
 
 # Create your views here.
@@ -16,6 +17,17 @@ class AccountListView(generics.ListAPIView):
     queryset = Account.objects.all()
     serializer_class = AccountSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+
+class AccountRetrieveView(generics.RetrieveAPIView):
+    queryset = Account.objects.all()
+    serializer_class = AccountRetrieveSerializer
+
+
+class UpdateAccountView(generics.UpdateAPIView):
+    queryset = Account.objects.all()
+    serializer_class = UpdateAccountSerializer
+    # permission_classes = [permissions.IsAuthenticated]
 
 
 class AccountAuthenticationView(views.APIView):
