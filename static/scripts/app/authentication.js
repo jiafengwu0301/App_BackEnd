@@ -2,9 +2,9 @@ angular
     .module('app')
     .factory('authenticationService', authenticationService);
 
-authenticationService.$inject = ['$http', '$cookies', '$rootScope', '$timeout', 'userService'];
+authenticationService.$inject = ['$http', '$cookies', '$rootScope', '$timeout'];
 
-function authenticationService($http, $cookies, $rootScope, $timeout, userService) {
+function authenticationService($http, $cookies, $rootScope, $timeout) {
     var service = {};
 
     service.login = login;
@@ -16,7 +16,6 @@ function authenticationService($http, $cookies, $rootScope, $timeout, userServic
     // make a post request to server with username and password to see if it is authenticate
     function login(username, password) {
         var user = {'username':username, 'password':password};
-
         return $http.post('/api-auth/', user)
             .then(handleSuccess, handleError);
     }
@@ -29,12 +28,12 @@ function authenticationService($http, $cookies, $rootScope, $timeout, userServic
         return { success: false, response: error };
     }
     // save the encoded username and password in cookie
-    function setCredentials(username, password, author) {
+    function setCredentials(username, password, account) {
         var authdata = Base64.encode(username + ':' + password);
         $rootScope.globals = {
-            currentUser: {
+            currentAccount: {
                 username: username,
-                author: author,
+                account: account,
                 authdata: authdata
             }
         };
