@@ -46,9 +46,22 @@ function registerController($q,$route,$location,$http){
 
         $http.post('/accounts/create/', vm.account);
 
+        $location.path('/#/login');
+
     }
 }
 
-function updateController($route,$location){
+function updateController($q,$route,$location,$http,$rootScope){
+    var vm = this;
 
+    vm.updateInfo = updateInfo;
+    vm.currentAccount = $rootScope.globals.currentAccount.account;
+
+    function updateInfo(){
+        var deferred = $q.defer();
+        alert(JSON.stringify(vm.update));
+        $http.put('/accounts/'+vm.currentAccount.id+'/update/',vm.update);
+        alert('Account Informations Changes. Require log out to complete.')
+        $location.path('/#/login');
+    }
 }

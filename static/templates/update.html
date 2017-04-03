@@ -19,21 +19,21 @@
     <h2>Update your account informations:</h2>
     <hr>
     <div class="well">
-        <form role="form" ng-submit="vm.update()">
+        <form role="form" ng-submit="vm.updateInfo()">
 
             <div class="form-group">
                 <label for="displayName">Diaplay Name</label>
-                <input type="text" class="form-control" id="displayName" ng-model="vm.displayName" placeholder="ex. john123" />
+                <input type="text" class="form-control" id="displayName" ng-model="vm.update.displayName" placeholder="ex. john123" />
             </div>
 
             <div class="form-group">
                 <label for="facebook">Facebook</label>
-                <input type="text" class="form-control" id="facebook" ng-model="vm.facebook" placeholder="ex. john_haha" />
+                <input type="text" class="form-control" id="facebook" ng-model="vm.update.facebook" placeholder="ex. john_haha" />
             </div>
 
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" class="form-control" id="password" ng-model="vm.password" placeholder="ex. password123" />
+                <input type="password" class="form-control" id="password" ng-model="vm.update.password" placeholder="ex. password123" />
             </div>
 
             <hr>
