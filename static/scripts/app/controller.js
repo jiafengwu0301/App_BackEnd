@@ -5,10 +5,32 @@ angular
     .controller('registerController', registerController)
     .controller('updateController', updateController)
 
-function homeController($route, $location,$rootScope){
+function homeController($route, $location,$rootScope,$facebook){
     var vm = this;
 
     vm.currentAccount = $rootScope.globals.currentAccount.account;
+    vm.isLoggedIn = false;
+    vm.facebook = facebook;
+    vm.welcomeMsg = null;
+
+    function facebook(){
+        $facebook.login().then(function(){
+            refresh();
+        });
+    }
+
+    function refresh() {
+        $facebook.api("/me").then(
+            function(response) {
+                vm.welcomeMsg = "Welcome " + response.name;
+                vm.isLoggedIn = true;
+            },
+            function(err) {
+                vm.welcomeMsg = "Please log in";
+            });
+    }
+
+    refresh();
 }
 
 function loginController($route,$location,authenticationService){

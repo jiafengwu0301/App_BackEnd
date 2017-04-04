@@ -1,8 +1,8 @@
 angular
-    .module('app', ['ngRoute', 'ngCookies'])
-    .config(['$routeProvider','$locationProvider',
-        function($routeProvider,$locationProvider){
-
+    .module('app', ['ngRoute', 'ngCookies','ngFacebook'])
+    .config(['$routeProvider','$locationProvider','$facebookProvider',
+        function($routeProvider,$locationProvider,$facebookProvider){
+            $facebookProvider.setAppId(290032334760758);
             $routeProvider.when('/',{
                 templateUrl: 'static/templates/main.html',
                 controller: 'homeController',
@@ -32,6 +32,14 @@ angular
 
 run.$inject = ['$rootScope', '$location', '$cookies', '$http'];
 function run($rootScope, $location, $cookies, $http) {
+    (function(d, s, id){
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/es_LA/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+
     // keep user logged in after page refresh
     $rootScope.globals = $cookies.getObject('globals') || {};
     if ($rootScope.globals.currentAccount) {

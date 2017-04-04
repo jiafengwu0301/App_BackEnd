@@ -21,3 +21,6 @@
 </p>
 
 <h3>Welcome: {{vm.currentAccount.displayName}}</h3>
+
+<h4>{{vm.welcomeMsg}}</h4>
+<button type="button" ng-click="vm.facebook()" ng-hide="vm.isLoggedIn" class="btn btn-default navbar-btn">Facebook Login</button>
